@@ -1,7 +1,7 @@
 class GuestSessionResponse {
   final bool success;
   final String guestSessionId;
-  final DateTime expiresAt;
+  final String expiresAt;
 
   GuestSessionResponse({
     required this.success,
@@ -14,7 +14,7 @@ class GuestSessionResponse {
     return GuestSessionResponse(
       success: json['success'],
       guestSessionId: json['guest_session_id'],
-      expiresAt: DateTime.parse(json['expires_at']),
+      expiresAt: json["expires_at"],
     );
   }
 }

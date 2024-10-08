@@ -50,7 +50,7 @@ class ApiService {
         final decodedData = jsonDecode(response.body);
 
         if (decodedData['results'] != null) {
-          return MovieResponse.fromJson(jsonDecode(response.body)).results;
+          return MovieResponse.fromJson(jsonDecode(response.body)).results!;
         } else {
           throw Exception('Invalid response data');
         }
@@ -60,6 +60,30 @@ class ApiService {
       }
     } catch (error) {
       throw Exception('Error occurred while getting now playing: $error');
+    }
+  }
+
+  Future<List<Movie>> getPopular() async {
+    const url = '$BASE_URL/movie/popular?$API_KEY_AUTH';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+
+        // if (decodedData['results'] != null) {
+        //   return 
+        // } else {
+        //   throw Exception('Invalid response data');
+        // }
+        return MovieResponse.fromJson(jsonDecode(response.body)).results!;
+      } else {
+        throw Exception(
+            'Failed to get popular. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error occurred while getting popular: $error');
     }
   }
 }

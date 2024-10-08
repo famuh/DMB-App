@@ -1,71 +1,53 @@
 class Movie {
-  bool adult;
-  String backdropPath;
-  List<int> genreIds;
-  int id;
-  OriginalLanguage originalLanguage;
-  String originalTitle;
-  String overview;
-  double popularity;
-  String posterPath;
-  DateTime releaseDate;
-  String title;
-  bool video;
-  double voteAverage;
-  int voteCount;
+  int? id;
+  String? title;
+  String? originalTitle;
+  String? backdropPath;
+  String? posterPath;
+  String? overview;
+  double? popularity;
+  String? releaseDate;
+  double? voteAverage;
+  int? voteCount;
+  bool? adult;
+  bool? video;
+  List<int>? genreIds;
 
   Movie({
-    required this.adult,
-    required this.backdropPath,
-    required this.genreIds,
-    required this.id,
-    required this.originalLanguage,
-    required this.originalTitle,
-    required this.overview,
-    required this.popularity,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.title,
-    required this.video,
-    required this.voteAverage,
-    required this.voteCount,
+    this.id,
+    this.title,
+    this.originalTitle,
+    this.backdropPath,
+    this.posterPath,
+    this.overview,
+    this.popularity,
+    this.releaseDate,
+    this.voteAverage,
+    this.voteCount,
+    this.adult,
+    this.video,
+    this.genreIds,
   });
 
- factory Movie.fromJson(Map<String, dynamic> json) => Movie(
-  adult: json["adult"],
-  backdropPath: json["backdrop_path"] ?? '',
-  genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
-  id: json["id"],
-  originalLanguage: originalLanguageValues.map[json["original_language"]] ?? OriginalLanguage.EN, // Gunakan default value jika null
-  originalTitle: json["original_title"] ?? '',
-  overview: json["overview"] ?? '',
-  popularity: json["popularity"]?.toDouble() ?? 0.0,
-  posterPath: json["poster_path"] ?? '',
-  releaseDate: json["release_date"] != null ? DateTime.parse(json["release_date"]) : DateTime.now(),
-  title: json["title"] ?? '',
-  video: json["video"] ?? false,
-  voteAverage: json["vote_average"]?.toDouble() ?? 0.0,
-  voteCount: json["vote_count"] ?? 0,
-);
-
-
-  Map<String, dynamic> toJson() => {
-        "adult": adult,
-        "backdrop_path": backdropPath,
-        "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
-        "id": id,
-        "original_language": originalLanguageValues.reverse[originalLanguage],
-        "original_title": originalTitle,
-        "overview": overview,
-        "popularity": popularity,
-        "poster_path": posterPath,
-        "release_date":
-            "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
-        "title": title,
-        "video": video,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-      };
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    return Movie(
+      id: json['id'],
+      title: json['title'],
+      originalTitle: json['original_title'],
+      backdropPath: json['backdrop_path'],
+      posterPath: json['poster_path'],
+      overview: json['overview'],
+      popularity: json['popularity'],
+      releaseDate: json['release_date'],
+      voteAverage: json['vote_average'],
+      voteCount: json['vote_count'],
+      adult: json['adult'],
+      video: json['video'],
+      genreIds: json['genre_ids'] != null
+          ? List<int>.from(json['genre_ids'].map((x) => x))
+          : null,
+    );
+  }
 }
 
 enum OriginalLanguage { EN, KO, PT }

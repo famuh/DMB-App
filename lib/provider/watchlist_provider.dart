@@ -35,7 +35,7 @@ class WatchlistProvider extends ChangeNotifier {
     }
   }
 
-  bool? _isAddedToWatchlist;
+  bool? _isAddedToWatchlist = false;
   bool? get isAddedToWatchlist => _isAddedToWatchlist;
 
   ResultState? _isWLState;

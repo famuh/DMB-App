@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dmb_app/provider/favorite_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -19,9 +20,7 @@ class MovieDetailScreen extends StatefulWidget {
   static const ROUTE_NAME = '/detail';
   final int id;
 
-  const MovieDetailScreen(
-      {Key? key, required this.id})
-      : super(key: key);
+  const MovieDetailScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   State<MovieDetailScreen> createState() => _MovieDetailScreenState();
@@ -56,8 +55,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             child: MovieDetailContent(
               movie: movie!,
               similiars: state.similiarMovies,
-
-              // masih dummy
               isAddedWatchlist: profileProf.isAddedToWatchlist!,
             ),
           );
@@ -83,7 +80,9 @@ class MovieDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final profileProf = Provider.of<WatchlistProvider>(context, listen: false);
+    final watchlistProv =
+        Provider.of<WatchlistProvider>(context, listen: false);
+    final favoriteProv = Provider.of<FavoriteProvider>(context, listen: false);
 
     return Stack(
       children: [
@@ -156,10 +155,12 @@ class MovieDetailContent extends StatelessWidget {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () async {
-                                      if (profileProf.isAddedToWatchlist == true) {
-                                        
+                                      if (watchlistProv.isAddedToWatchlist ==
+                                          true) {
+                                        // remove
                                       } else {
-                                        profileProf.addMovieToWatchList(movie);
+                                        watchlistProv
+                                            .addMovieToWatchList(movie);
                                       }
                                       // else {
                                       //   await Provider.of<MovieDetailNotifier>(
@@ -191,25 +192,34 @@ class MovieDetailContent extends StatelessWidget {
                                       //       });
                                       // }
                                     },
-                                    child:  Row(
+                                    child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                       
-
-                                        
-                                          profileProf.isAddedToWatchlist == true
+                                        watchlistProv.isAddedToWatchlist == true
                                             ? const Icon(Icons.check)
                                             : const Icon(Icons.add),
                                         const Text('Watchlist'),
                                       ],
                                     ),
                                   ),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: FaIcon(
-                                        FontAwesomeIcons.heart,
-                                        color: Colors.red[400]!,
-                                      )),
+                                  favoriteProv.isAddedToFavorite == true
+                                      ? IconButton(
+                                          onPressed: () {
+                                            // fungsi hapus
+                                          },
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.solidHeart,
+                                            color: Colors.red[400]!,
+                                          ))
+                                      : IconButton(
+                                          onPressed: () {
+                                            // tambah item
+                                            favoriteProv.addMovieToFavorite(movie);
+                                          },
+                                          icon: FaIcon(
+                                            FontAwesomeIcons.heart,
+                                            color: Colors.red[400]!,
+                                          )),
                                 ],
                               ),
                             ),
@@ -267,7 +277,6 @@ class MovieDetailContent extends StatelessWidget {
                             //     }
                             //   },
                             // ),
-                      
                           ],
                         ),
                       ),

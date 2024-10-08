@@ -1,5 +1,6 @@
 import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/utils.dart';
+import 'package:dmb_app/provider/favorite_provider.dart';
 import 'package:dmb_app/provider/watchlist_provider.dart';
 import 'package:dmb_app/widget/movie_card.dart';
 import 'package:flutter/material.dart';
@@ -128,8 +129,25 @@ class FavoriteMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text("aduhai"),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Consumer<FavoriteProvider>(
+        builder: (context, state, _) {
+          if (state.favoriteMovies == null || state.favoriteMovies!.isEmpty) {
+            return const Center(
+              child: Text("Belum ada item di favorite"),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: state.favoriteMovies!.length,
+              itemBuilder: (context, index) {
+                var movieData = state.favoriteMovies![index];
+                return MovieCard(movieData);
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }

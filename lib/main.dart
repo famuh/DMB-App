@@ -1,4 +1,5 @@
 import 'package:dmb_app/common/utils.dart';
+import 'package:dmb_app/provider/favorite_provider.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/movie_list_provider.dart';
 import 'package:dmb_app/provider/watchlist_provider.dart';
@@ -27,6 +28,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MovieListProvider()),
         ChangeNotifierProvider(create: (_) => MovieDetailProvider()),
         ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(

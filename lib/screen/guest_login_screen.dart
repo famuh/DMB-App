@@ -4,6 +4,7 @@ import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/guest_login_provider.dart';
@@ -52,9 +53,11 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
             return Stack(
               children: [
                 SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: const AnimatedImage()),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: const AnimatedImage()
+           
+                ),
                 Container(
                   width: mediaQueryWidth(context),
                   height: mediaQueryHeight(context),
@@ -78,25 +81,22 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                         const Text(
                           "Get ready to dive into the greatest stories wrapped in captivating films.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                          style: TextStyle(
+                            
+                          ),),
+                          const SizedBox(height: 10,),
                         SizedBox(
-                          width: mediaQueryWidth(context) / 2,
+                          width: mediaQueryWidth(context)/2,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              await guestSessionProvider.createGuestSession();
-                            },
-                            style: ElevatedButton.styleFrom(
+                              onPressed: () async {
+                                await guestSessionProvider.createGuestSession();
+                              },
+                              style: ElevatedButton.styleFrom(
                                 backgroundColor: cGreen,
-                                foregroundColor: Colors.white),
-                            child: const Row(children: [
-                              Text("Watch Now"),
-                            ]),
-                          ),
-                        )
+                                foregroundColor: Colors.white
+                              ),
+                              child: const Text("Watch Now"),),
+                        ),
                       ],
                     ),
                   ),

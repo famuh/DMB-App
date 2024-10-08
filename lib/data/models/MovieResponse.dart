@@ -6,38 +6,30 @@ import 'package:dmb_app/data/models/Movie.dart';
 
 MovieResponse movieResponseFromJson(String str) => MovieResponse.fromJson(json.decode(str));
 
-String movieResponseToJson(MovieResponse data) => json.encode(data.toJson());
 
 class MovieResponse {
-    Dates dates;
-    int page;
-    List<Movie> results;
-    int totalPages;
-    int totalResults;
+  int? page;
+  List<Movie>? results;
+  int? totalPages;
+  int? totalResults;
 
-    MovieResponse({
-        required this.dates,
-        required this.page,
-        required this.results,
-        required this.totalPages,
-        required this.totalResults,
-    });
+  MovieResponse({
+    this.page,
+    this.results,
+    this.totalPages,
+    this.totalResults,
+  });
 
-    factory MovieResponse.fromJson(Map<String, dynamic> json) => MovieResponse(
-        dates: Dates.fromJson(json["dates"]),
-        page: json["page"],
-        results: List<Movie>.from(json["results"].map((x) => Movie.fromJson(x))),
-        totalPages: json["total_pages"],
-        totalResults: json["total_results"],
+  factory MovieResponse.fromJson(Map<String, dynamic> json) {
+    return MovieResponse(
+      page: json['page'],
+      results: json['results'] != null
+          ? List<Movie>.from(json['results'].map((x) => Movie.fromJson(x)))
+          : null,
+      totalPages: json['total_pages'],
+      totalResults: json['total_results'],
     );
-
-    Map<String, dynamic> toJson() => {
-        "dates": dates.toJson(),
-        "page": page,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
-        "total_pages": totalPages,
-        "total_results": totalResults,
-    };
+  }
 }
 
 class Dates {

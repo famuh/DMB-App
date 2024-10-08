@@ -21,9 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<MovieListProvider>(context, listen: false)
-          ..fetchNowPlayingMovies());
+    Future.microtask(
+        () => Provider.of<MovieListProvider>(context, listen: false)
+          ..fetchNowPlayingMovies()
+          ..fetchPopularMovies());
   }
 
   @override
@@ -63,6 +64,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     return MovieList(data.nowPlayingMovies!);
                   } else {
                     print(data.errorMessage);
+                    return const Text('Failed');
+                  }
+                }),
+
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text("Popular"), Text("see all")],
+                ),
+                Consumer<MovieListProvider>(builder: (context, data, _) {
+                  final state = data.popularState;
+                  if (state == ResultState.loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state == ResultState.success) {
+                    return MovieList(data.popularMovies!);
+                  } else {
+                    print(data.popularError);
                     return const Text('Failed');
                   }
                 }),

@@ -15,6 +15,10 @@ class GuestSessionProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   ResultState? get state => _state;
 
+  String? get sessionId => _sessionId;
+  String? _sessionId;
+
+
   final ApiService _apiService = ApiService();
 
   Future<void> createGuestSession() async {
@@ -26,6 +30,7 @@ class GuestSessionProvider with ChangeNotifier {
       _isAuthenticated = true;
       _errorMessage = null;
       _state = ResultState.success;
+      _sessionId = _guestSession?.guestSessionId;
     } catch (error) {
       _isAuthenticated = false;
       _guestSession = null;

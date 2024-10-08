@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dmb_app/common/state_enum.dart';
-import 'package:dmb_app/widget/movie_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -9,19 +7,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:dmb_app/common/constant.dart';
+import 'package:dmb_app/common/state_enum.dart';
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
+import 'package:dmb_app/provider/watchlist_provider.dart';
+import 'package:dmb_app/widget/movie_card_list.dart';
 
 import '../data/models/Movie.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   static const ROUTE_NAME = '/detail';
   final int id;
+  final String guestSessionId;
 
-  const MovieDetailScreen({
-    Key? key,
-    required this.id,
-  }) : super(key: key);
+  const MovieDetailScreen(
+      {Key? key, required this.id, required this.guestSessionId})
+      : super(key: key);
 
   @override
   State<MovieDetailScreen> createState() => _MovieDetailScreenState();
@@ -34,9 +35,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     Future.microtask(() {
       Provider.of<MovieDetailProvider>(context, listen: false)
-        ..fetchDetailMovie(widget.id);
-
-      // tambahin watchlist
+        ..fetchDetailMovie(widget.id)
+        ..checkWatchlist(widget.guestSessionId, widget.id);
     });
   }
 
@@ -54,9 +54,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             child: MovieDetailContent(
               movie: movie!,
               similiars: state.similiarMovies,
+              guestId: widget.guestSessionId,
 
               // masih dummy
-              isAddedWatchlist: false,
+              isAddedWatchlist: true,
             ),
           );
         } else {
@@ -71,28 +72,39 @@ class MovieDetailContent extends StatelessWidget {
   final Movie movie;
   final List<Movie> similiars;
   final bool isAddedWatchlist;
+  final String guestId;
 
   const MovieDetailContent({
     Key? key,
     required this.movie,
     required this.similiars,
     required this.isAddedWatchlist,
+    required this.guestId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CachedNetworkImage(
-          imageUrl:
-              'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-          
-          width: mediaQueryWidth(context),
-          placeholder: (context, url) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          errorWidget: (context, url, error) => const Center(child:  Icon(Icons.error)),
-        ),
+        movie.posterPath != null && movie.posterPath!.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: 'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                width: mediaQueryWidth(context),
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) =>
+                    const Center(child: Icon(Icons.error)),
+              )
+            : Container(
+                height: 300, // Adjust the height based on your layout
+                width: mediaQueryWidth(context),
+                color:
+                    Colors.grey, // Placeholder color if no image is available
+                child: const Center(
+                  child: Text('No Image Available'),
+                ),
+              ),
         Container(
           margin: const EdgeInsets.only(top: 48 + 8),
           child: DraggableScrollableSheet(
@@ -127,7 +139,7 @@ class MovieDetailContent extends StatelessWidget {
                                   ),
                                   itemSize: 24,
                                 ),
-                                // Text('${movie.voteAverage}')
+                                Text('${movie.voteAverage}')
                               ],
                             ),
                             Text(
@@ -141,26 +153,26 @@ class MovieDetailContent extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  
                                   ElevatedButton(
                                     onPressed: () async {
-                                      // if (!isAddedWatchlist) {
-                                      //   await Provider.of<MovieDetailNotifier>(
-                                      //           context,
-                                      //           listen: false)
-                                      //       .addWatchlist(movie);
-                                      // } else {
+                                      if (!isAddedWatchlist) {
+                                        await Provider.of<WatchlistProvider>(
+                                                context,
+                                                listen: false)
+                                            .addWatchlist(guestId, movie);
+                                      }
+                                      // else {
                                       //   await Provider.of<MovieDetailNotifier>(
                                       //           context,
                                       //           listen: false)
                                       //       .removeFromWatchlist(movie);
                                       // }
-                              
+
                                       // final message =
                                       //     Provider.of<MovieDetailNotifier>(context,
                                       //             listen: false)
                                       //         .watchlistMessage;
-                              
+
                                       // if (message ==
                                       //         MovieDetailNotifier
                                       //             .watchlistAddSuccessMessage ||
@@ -184,7 +196,7 @@ class MovieDetailContent extends StatelessWidget {
                                       children: [
                                         Icon(Icons.add),
                                         Text('Watchlist'),
-                              
+
                                         // isAddedWatchlist
                                         //     ? Icon(Icons.check)
                                         //     : Icon(Icons.add),
@@ -192,10 +204,12 @@ class MovieDetailContent extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                             
-                             IconButton(
+                                  IconButton(
                                       onPressed: () {},
-                                      icon:  FaIcon(FontAwesomeIcons.heart, color: Colors.red[400]!,)),
+                                      icon: FaIcon(
+                                        FontAwesomeIcons.heart,
+                                        color: Colors.red[400]!,
+                                      )),
                                 ],
                               ),
                             ),

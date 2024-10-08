@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dmb_app/screen/movie_detail_screen.dart';
+import 'package:dmb_app/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,33 +44,18 @@ class _HomeScreenState extends State<HomeScreen> {
           scrollDirection: Axis.vertical,
           child: Column(
             children: [
-              const ListTile(
-                title: Text(
+               ListTile(
+                title: const Text(
                   "Hello, Guest!",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                subtitle: Text("Semua film kesukaanmu, dalam genggaman."),
+                subtitle: const Text("Semua film kesukaanmu, dalam genggaman."),
+                trailing: IconButton(onPressed: () => Navigator.pushNamed(context, ProfileScreen.ROUTE_NAME), icon: const FaIcon(FontAwesomeIcons.userAstronaut)),
               ),
               spaceH30,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  _menuButton(
-                      title: "Watchlist",
-                      icon: FontAwesomeIcons.clock,
-                      onTap: () {},
-                      color: cGreen),
-                      spaceW10,
-                  _menuButton(
-                      title: "Favorite",
-                      icon: FontAwesomeIcons.heart,
-                      onTap: () {},
-                      color: Colors.red[400]!),
-                ],
-              ),
               spaceH30,
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,51 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     ));
-  }
-}
-
-class _menuButton extends StatelessWidget {
-  String title;
-  IconData icon;
-  VoidCallback onTap;
-  Color color;
-
-  _menuButton({
-    Key? key,
-    required this.title,
-    required this.icon,
-    required this.onTap,
-    required this.color,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-            // color: cGreen,
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: color, width: 2)),
-        width: 150,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: TextStyle(color: color),
-            ),
-            spaceW10,
-            FaIcon(
-              icon,
-              color: color,
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
 

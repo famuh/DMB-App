@@ -1,8 +1,10 @@
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/movie_list_provider.dart';
+import 'package:dmb_app/provider/watchlist_provider.dart';
 import 'package:dmb_app/screen/home_screen.dart';
 import 'package:dmb_app/screen/movie_detail_screen.dart';
+import 'package:dmb_app/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GuestSessionProvider()),
         ChangeNotifierProvider(create: (_) => MovieListProvider()),
         ChangeNotifierProvider(create: (_) => MovieDetailProvider()),
+        ChangeNotifierProvider(create: (_) => WatchlistProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(
@@ -31,7 +34,7 @@ class MainApp extends StatelessWidget {
           primaryColor: cBlack,
           scaffoldBackgroundColor: cBlack
         ),
-        home: const HomeScreen(),
+        home:  AuthCheck(),
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {
@@ -40,11 +43,16 @@ class MainApp extends StatelessWidget {
             case GuestLoginScreen.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => const GuestLoginScreen());
             case MovieDetailScreen.ROUTE_NAME:
-              final id = settings.arguments as int;
+                          final List<dynamic> arguments = settings.arguments as List<dynamic>;
+
+              final id = arguments[0];
+              final guestId = arguments[1];
               return MaterialPageRoute(
-                builder: (_) => MovieDetailScreen(id: id),
+                builder: (_) => MovieDetailScreen(id: id, guestSessionId: guestId,),
                 settings: settings,
               );
+              case ProfileScreen.ROUTE_NAME:
+              return MaterialPageRoute(builder: (_) => const ProfileScreen());
             default:
               return MaterialPageRoute(builder: (_) {
                 return const Scaffold(

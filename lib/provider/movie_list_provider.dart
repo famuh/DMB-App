@@ -56,7 +56,7 @@ class MovieListProvider extends ChangeNotifier {
       if (result.isNotEmpty) {
         _popularState = ResultState.success;
         List<Movie> limitedMovies =
-            result.length > 6 ? result.sublist(0, 6) : result;
+            result.length > 20 ? result.sublist(0, 20) : result;
 
         _popularMovies = limitedMovies;
       } else {

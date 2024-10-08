@@ -4,7 +4,7 @@ import '../common/state_enum.dart';
 import '../data/api/api_service.dart';
 import '../data/models/Movie.dart';
 
-class ProfileProvider extends ChangeNotifier {
+class WatchlistProvider extends ChangeNotifier {
   ResultState? _watchlistState;
   List<Movie>? _watchlistMovies = [];
   String _watchlistMessage = '';

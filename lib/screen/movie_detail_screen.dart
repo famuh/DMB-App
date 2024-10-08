@@ -10,7 +10,7 @@ import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/state_enum.dart';
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
-import 'package:dmb_app/provider/profile_provider.dart';
+import 'package:dmb_app/provider/watchlist_provider.dart';
 import 'package:dmb_app/widget/movie_card_list.dart';
 
 import '../data/models/Movie.dart';
@@ -36,14 +36,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       Provider.of<MovieDetailProvider>(context, listen: false)
         ..fetchDetailMovie(widget.id);
 
-      Provider.of<ProfileProvider>(context, listen: false)
+      Provider.of<WatchlistProvider>(context, listen: false)
         ..checkWatchlist(widget.id);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final profileProf = Provider.of<ProfileProvider>(context, listen: false);
+    final profileProf = Provider.of<WatchlistProvider>(context, listen: false);
     return Scaffold(body: SafeArea(child: Consumer<MovieDetailProvider>(
       builder: (context, state, _) {
         if (state.detailState == ResultState.loading) {
@@ -83,7 +83,7 @@ class MovieDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final profileProf = Provider.of<ProfileProvider>(context, listen: false);
+        final profileProf = Provider.of<WatchlistProvider>(context, listen: false);
 
     return Stack(
       children: [

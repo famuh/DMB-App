@@ -1,6 +1,6 @@
 import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/utils.dart';
-import 'package:dmb_app/provider/profile_provider.dart';
+import 'package:dmb_app/provider/watchlist_provider.dart';
 import 'package:dmb_app/widget/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -101,7 +101,7 @@ class WatchlistMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Consumer<ProfileProvider>(
+      child: Consumer<WatchlistProvider>(
         builder: (context, state, _) {
           if (state.watchlistMovies == null || state.watchlistMovies!.isEmpty) {
             return const Center(

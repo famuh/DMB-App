@@ -1,7 +1,7 @@
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/movie_list_provider.dart';
-import 'package:dmb_app/provider/profile_provider.dart';
+import 'package:dmb_app/provider/watchlist_provider.dart';
 import 'package:dmb_app/screen/home_screen.dart';
 import 'package:dmb_app/screen/movie_detail_screen.dart';
 import 'package:dmb_app/screen/profile_screen.dart';
@@ -26,7 +26,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GuestSessionProvider()),
         ChangeNotifierProvider(create: (_) => MovieListProvider()),
         ChangeNotifierProvider(create: (_) => MovieDetailProvider()),
-        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => WatchlistProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(

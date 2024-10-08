@@ -114,49 +114,4 @@ class ApiService {
     }
   }
 
-  Future<void> addWatchlist(String sessionId, int movieId) async {
-    String url = '$BASE_URL/account/$sessionId/watchlist?$API_KEY_AUTH';
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode({
-          'media_type': 'movie',
-          'media_id': movieId,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 201) {
-        print('Watchlist berhasil ditambahkan');
-      } else {
-        print('Gagal menambahkan watchlist: ${response.statusCode}');
-        throw Exception('Gagal menambahkan watchlist: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Gagal menambahkan watchlist: $e');
-    }
-  }
-
-  Future<bool> isMovieInWatchlist(int movieId, String guestSessionId) async {
-  final url = Uri.parse(
-      'https://api.themoviedb.org/3/account/$guestSessionId/watchlist?$API_KEY_AUTH');
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    final List<dynamic> results = data['results'];
-
-    for (var result in results) {
-      if (result['id'] == movieId) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
 }

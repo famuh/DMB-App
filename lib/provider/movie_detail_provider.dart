@@ -58,29 +58,4 @@ class MovieDetailProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-
-   ResultState? _checkState;
-  bool? _isAdd;
-  String _isAddError = '';
-
-  bool? get isAdd => _isAdd;
-  String get isAddError => _isAddError;
-  ResultState? get checkState => _checkState;
-
-  Future<void> checkWatchlist(String sessionId, int movieId) async {
-    _checkState = ResultState.loading;
-    notifyListeners();
-    try {
-      await _apiService.isMovieInWatchlist(movieId, sessionId);
-      _checkState = ResultState.success;
-      _isAdd = true;
-    } catch (e) {
-      _checkState = ResultState.error;
-      _isAddError = e.toString();
-      _isAdd = false;
-    } finally {
-      notifyListeners();
-    }
-  }
 }

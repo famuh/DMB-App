@@ -23,7 +23,7 @@ class MovieCardList extends StatelessWidget {
           Navigator.pushNamed(
             context,
             MovieDetailScreen.ROUTE_NAME,
-            arguments: [movie.id, "9f0dbfd2511e7f7a67c7291b564358bd"],
+            arguments: movie.id,
           );
         },
         child: ClipRRect(

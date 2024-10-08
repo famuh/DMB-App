@@ -10,7 +10,7 @@ import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/state_enum.dart';
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
-import 'package:dmb_app/provider/watchlist_provider.dart';
+import 'package:dmb_app/provider/profile_provider.dart';
 import 'package:dmb_app/widget/movie_card_list.dart';
 
 import '../data/models/Movie.dart';
@@ -18,10 +18,9 @@ import '../data/models/Movie.dart';
 class MovieDetailScreen extends StatefulWidget {
   static const ROUTE_NAME = '/detail';
   final int id;
-  final String guestSessionId;
 
   const MovieDetailScreen(
-      {Key? key, required this.id, required this.guestSessionId})
+      {Key? key, required this.id})
       : super(key: key);
 
   @override
@@ -35,13 +34,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     Future.microtask(() {
       Provider.of<MovieDetailProvider>(context, listen: false)
-        ..fetchDetailMovie(widget.id)
-        ..checkWatchlist(widget.guestSessionId, widget.id);
+        ..fetchDetailMovie(widget.id);
+
+      Provider.of<ProfileProvider>(context, listen: false)
+        ..checkWatchlist(widget.id);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final profileProf = Provider.of<ProfileProvider>(context, listen: false);
     return Scaffold(body: SafeArea(child: Consumer<MovieDetailProvider>(
       builder: (context, state, _) {
         if (state.detailState == ResultState.loading) {
@@ -54,10 +56,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             child: MovieDetailContent(
               movie: movie!,
               similiars: state.similiarMovies,
-              guestId: widget.guestSessionId,
 
               // masih dummy
-              isAddedWatchlist: true,
+              isAddedWatchlist: profileProf.isAddedToWatchlist!,
             ),
           );
         } else {
@@ -72,18 +73,18 @@ class MovieDetailContent extends StatelessWidget {
   final Movie movie;
   final List<Movie> similiars;
   final bool isAddedWatchlist;
-  final String guestId;
 
   const MovieDetailContent({
     Key? key,
     required this.movie,
     required this.similiars,
     required this.isAddedWatchlist,
-    required this.guestId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+        final profileProf = Provider.of<ProfileProvider>(context, listen: false);
+
     return Stack(
       children: [
         movie.posterPath != null && movie.posterPath!.isNotEmpty
@@ -155,11 +156,10 @@ class MovieDetailContent extends StatelessWidget {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () async {
-                                      if (!isAddedWatchlist) {
-                                        await Provider.of<WatchlistProvider>(
-                                                context,
-                                                listen: false)
-                                            .addWatchlist(guestId, movie);
+                                      if (profileProf.isAddedToWatchlist == true) {
+                                        
+                                      } else {
+                                        profileProf.addMovieToWatchList(movie);
                                       }
                                       // else {
                                       //   await Provider.of<MovieDetailNotifier>(
@@ -191,16 +191,16 @@ class MovieDetailContent extends StatelessWidget {
                                       //       });
                                       // }
                                     },
-                                    child: const Row(
+                                    child:  Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Icon(Icons.add),
-                                        Text('Watchlist'),
+                                       
 
-                                        // isAddedWatchlist
-                                        //     ? Icon(Icons.check)
-                                        //     : Icon(Icons.add),
-                                        // Text('Watchlist'),
+                                        
+                                          profileProf.isAddedToWatchlist == true
+                                            ? const Icon(Icons.check)
+                                            : const Icon(Icons.add),
+                                        const Text('Watchlist'),
                                       ],
                                     ),
                                   ),
@@ -237,34 +237,37 @@ class MovieDetailContent extends StatelessWidget {
                               // style: kHeading6,
                             ),
                             spaceH10,
-                            Consumer<MovieDetailProvider>(
-                              builder: (context, data, _) {
-                                if (data.similiarState == ResultState.loading) {
-                                  return const Center(
-                                    child: const CircularProgressIndicator(),
-                                  );
-                                } else if (data.similiarState ==
-                                    ResultState.error) {
-                                  return Text(data.errorMessage);
-                                } else if (data.similiarState ==
-                                    ResultState.success) {
-                                  return SizedBox(
-                                    height: 160,
-                                    child: ListView.builder(
-                                      itemCount: similiars.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final movieItem = similiars[index];
-                                        return MovieCardList(movie: movieItem);
-                                      },
-                                    ),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              },
-                            ),
+
+                            // disini kendalanya
+                            // Consumer<MovieDetailProvider>(
+                            //   builder: (context, data, _) {
+                            //     if (data.similiarState == ResultState.loading) {
+                            //       return const Center(
+                            //         child: const CircularProgressIndicator(),
+                            //       );
+                            //     } else if (data.similiarState ==
+                            //         ResultState.error) {
+                            //       return Text(data.errorMessage);
+                            //     } else if (data.similiarState ==
+                            //         ResultState.success) {
+                            //       return SizedBox(
+                            //         height: 160,
+                            //         child: ListView.builder(
+                            //           itemCount: similiars.length,
+                            //           scrollDirection: Axis.horizontal,
+                            //           itemBuilder:
+                            //               (BuildContext context, int index) {
+                            //             final movieItem = similiars[index];
+                            //             return MovieCardList(movie: movieItem);
+                            //           },
+                            //         ),
+                            //       );
+                            //     } else {
+                            //       return Container();
+                            //     }
+                            //   },
+                            // ),
+                      
                           ],
                         ),
                       ),

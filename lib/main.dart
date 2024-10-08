@@ -1,7 +1,7 @@
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/movie_list_provider.dart';
-import 'package:dmb_app/provider/watchlist_provider.dart';
+import 'package:dmb_app/provider/profile_provider.dart';
 import 'package:dmb_app/screen/home_screen.dart';
 import 'package:dmb_app/screen/movie_detail_screen.dart';
 import 'package:dmb_app/screen/profile_screen.dart';
@@ -26,7 +26,7 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GuestSessionProvider()),
         ChangeNotifierProvider(create: (_) => MovieListProvider()),
         ChangeNotifierProvider(create: (_) => MovieDetailProvider()),
-        ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(
@@ -43,12 +43,10 @@ class MainApp extends StatelessWidget {
             case GuestLoginScreen.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => const GuestLoginScreen());
             case MovieDetailScreen.ROUTE_NAME:
-                          final List<dynamic> arguments = settings.arguments as List<dynamic>;
+                final int id = settings.arguments as int;
 
-              final id = arguments[0];
-              final guestId = arguments[1];
               return MaterialPageRoute(
-                builder: (_) => MovieDetailScreen(id: id, guestSessionId: guestId,),
+                builder: (_) => MovieDetailScreen(id: id),
                 settings: settings,
               );
               case ProfileScreen.ROUTE_NAME:

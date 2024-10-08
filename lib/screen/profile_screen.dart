@@ -1,7 +1,10 @@
 import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/utils.dart';
+import 'package:dmb_app/provider/profile_provider.dart';
+import 'package:dmb_app/widget/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const ROUTE_NAME = '/profile';
@@ -96,11 +99,29 @@ class WatchlistMovie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text("alamak"),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Consumer<ProfileProvider>(
+        builder: (context, state, _) {
+          if (state.watchlistMovies == null || state.watchlistMovies!.isEmpty) {
+            return const Center(
+              child: Text("Belum ada item di watchlist"),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: state.watchlistMovies!.length,
+              itemBuilder: (context, index) {
+                var movieData = state.watchlistMovies![index];
+                return MovieCard(movieData);
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }
+
 
 class FavoriteMovie extends StatelessWidget {
   const FavoriteMovie({super.key});

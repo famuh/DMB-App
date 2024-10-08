@@ -10,6 +10,7 @@ dependencies:
   cached_network_image: ^3.4.0
   flutter:
     sdk: flutter
+  flutter_rating_bar: ^4.0.1
   font_awesome_flutter: ^10.7.0
   http: ^1.2.2
   

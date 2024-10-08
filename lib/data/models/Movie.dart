@@ -48,6 +48,24 @@ class Movie {
           : null,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'original_title': originalTitle,
+      'backdrop_path': backdropPath,
+      'poster_path': posterPath,
+      'overview': overview,
+      'popularity': popularity,
+      'release_date': releaseDate,
+      'vote_average': voteAverage,
+      'vote_count': voteCount,
+      'adult': adult,
+      'video': video,
+      'genre_ids': genreIds,
+    };
+  }
 }
 
 enum OriginalLanguage { EN, KO, PT }

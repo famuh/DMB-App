@@ -1,6 +1,8 @@
 import 'package:dmb_app/common/utils.dart';
+import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/movie_list_provider.dart';
 import 'package:dmb_app/screen/home_screen.dart';
+import 'package:dmb_app/screen/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,7 @@ class MainApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => GuestSessionProvider()),
         ChangeNotifierProvider(create: (_) => MovieListProvider()),
+        ChangeNotifierProvider(create: (_) => MovieDetailProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData.dark().copyWith(
@@ -36,6 +39,12 @@ class MainApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => const HomeScreen());
             case GuestLoginScreen.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => const GuestLoginScreen());
+            case MovieDetailScreen.ROUTE_NAME:
+              final id = settings.arguments as int;
+              return MaterialPageRoute(
+                builder: (_) => MovieDetailScreen(id: id),
+                settings: settings,
+              );
             default:
               return MaterialPageRoute(builder: (_) {
                 return const Scaffold(

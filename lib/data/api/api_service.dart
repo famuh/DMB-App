@@ -70,13 +70,6 @@ class ApiService {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        final decodedData = jsonDecode(response.body);
-
-        // if (decodedData['results'] != null) {
-        //   return 
-        // } else {
-        //   throw Exception('Invalid response data');
-        // }
         return MovieResponse.fromJson(jsonDecode(response.body)).results!;
       } else {
         throw Exception(
@@ -86,4 +79,66 @@ class ApiService {
       throw Exception('Error occurred while getting popular: $error');
     }
   }
+
+  Future<Movie> getMovieDetail(int movieId) async {
+    String url = '$BASE_URL/movie/$movieId?$API_KEY_AUTH';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        return Movie.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(
+            'Failed to get popular. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error occurred while getting popular: $error');
+    }
+  }
+
+  Future<List<Movie>> getSimiliarMovies(int movieId) async {
+    String url = '$BASE_URL/movie/$movieId/similar?$API_KEY_AUTH';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        return MovieResponse.fromJson(jsonDecode(response.body)).results!;
+      } else {
+        throw Exception(
+            'Failed to get similiar. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error occurred while getting similiar: $error');
+    }
+  }
+
+  // Future<void> addWatchlist(String sessionId, int movieId) async {
+  //   String url = 'https://api.themoviedb.org/3/guest_session/$sessionId/rating';
+
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       body: jsonEncode({
+  //         'media_type': 'movie',
+  //         'media_id': movieId,
+  //       }),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $API_KEY', // ganti dengan API key Anda
+  //       },
+  //     );
+
+  //     if (response.statusCode == 201) {
+  //       print('Watchlist berhasil ditambahkan');
+  //     } else {
+  //       print('Gagal menambahkan watchlist: ${response.statusCode}');
+  //       throw Exception('Gagal menambahkan watchlist: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //     throw Exception('Gagal menambahkan watchlist: $e');
+  //   }
+  // }
 }

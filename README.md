@@ -15,7 +15,8 @@ DMB App is a Flutter application that allows users to explore movie information 
 - **Flutter**: Framework for mobile app development.
 - **Provider**: State management for managing app state.
 - **HTTP**: Accessing the API from The Movie DB.
-- **Dart**: Programming language for Flutter app development.
+- **Dart**: Programming language for Flutter app development. Using Dart 3.3.1 (stable) Version
+- **Flutter**: Using Flutter 3.19.3 Version
 
 ## Installation
 

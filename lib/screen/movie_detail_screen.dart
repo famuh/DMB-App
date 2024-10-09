@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dmb_app/provider/imate_to_local_provider.dart';
+import 'package:dmb_app/provider/image_to_local_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

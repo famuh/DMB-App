@@ -1,6 +1,6 @@
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/favorite_provider.dart';
-import 'package:dmb_app/provider/imate_to_local_provider.dart';
+import 'package:dmb_app/provider/image_to_local_provider.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/movie_list_provider.dart';
 import 'package:dmb_app/provider/watchlist_provider.dart';
@@ -24,6 +24,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      // Setting up multi-provider for state management
       providers: [
         ChangeNotifierProvider(create: (_) => GuestSessionProvider()),
         ChangeNotifierProvider(create: (_) => MovieListProvider()),
@@ -36,25 +37,28 @@ class MainApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           colorScheme: kColorScheme,
           primaryColor: cBlack,
-          scaffoldBackgroundColor: cBlack
+          scaffoldBackgroundColor: cBlack,
         ),
-        home:  AuthCheck(),
+        home: AuthCheck(), // Initial Screen
         navigatorObservers: [routeObserver],
         onGenerateRoute: (RouteSettings settings) {
+          // Route generator for handling named routes
           switch (settings.name) {
             case HomeScreen.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => const HomeScreen());
             case GuestLoginScreen.ROUTE_NAME:
-              return MaterialPageRoute(builder: (_) => const GuestLoginScreen());
+              return MaterialPageRoute(
+                  builder: (_) => const GuestLoginScreen());
             case MovieDetailScreen.ROUTE_NAME:
-                final int id = settings.arguments as int;
-
+              final int id = settings.arguments as int;
               return MaterialPageRoute(
                 builder: (_) => MovieDetailScreen(id: id),
                 settings: settings,
               );
-              case ProfileScreen.ROUTE_NAME:
+            case ProfileScreen.ROUTE_NAME:
               return MaterialPageRoute(builder: (_) => const ProfileScreen());
+
+            // Fallback for unknown routes
             default:
               return MaterialPageRoute(builder: (_) {
                 return const Scaffold(
@@ -86,7 +90,7 @@ class AuthCheck extends StatelessWidget {
           return const Scaffold(
             body: Center(child: Text('An error occurred!')),
           );
-        } else if (snapshot.hasData && snapshot.data == true) {
+        } else if (snapshot.data == true) {
           // If authenticated, show HomeScreen
           return const HomeScreen();
         } else {
@@ -98,7 +102,9 @@ class AuthCheck extends StatelessWidget {
   }
 
   Future<bool> _checkAuth(BuildContext context) async {
-    final guestSessionProvider = Provider.of<GuestSessionProvider>(context, listen: false);
+    // Function to check if the user is authenticated
+    final guestSessionProvider =
+        Provider.of<GuestSessionProvider>(context, listen: false);
     return guestSessionProvider.isAuthenticated;
   }
 }

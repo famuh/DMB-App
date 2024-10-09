@@ -18,6 +18,7 @@ class ImageToLocalProvider with ChangeNotifier {
     _state = ResultState.loading;
     notifyListeners();
     try {
+      /// cretae path to save image
       String savedPath = await saveImageToLocal(imageUrl, fileName);
 
       if (savedPath.isNotEmpty) {
@@ -28,6 +29,7 @@ class ImageToLocalProvider with ChangeNotifier {
         _message = "Failed to save image";
       }
     } catch (e) {
+      /// throw exception occur
       _state = ResultState.error;
       throw Exception('Error saving image: $e');
     } finally {

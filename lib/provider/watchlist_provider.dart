@@ -66,13 +66,15 @@ class WatchlistProvider extends ChangeNotifier {
     }
   }
 
-   // Fungsi untuk menghapus movie dari favorite
+  // Fungsi untuk menghapus movie dari favorite
   removeMovieFromWatchlist(Movie movie) async {
     _watchlistState = ResultState.loading;
     notifyListeners();
     try {
       _watchlistMovies!.removeWhere((item) => item.id == movie.id);
       _watchlistMessage = "Berhasil menghapus item dari watchlist";
+            _isAddedToWatchlist = false;
+
       print("berhasil hapus watchlis");
     } catch (e) {
       print(e.toString());

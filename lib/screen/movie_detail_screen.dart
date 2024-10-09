@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dmb_app/provider/imate_to_local_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -111,8 +112,7 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
         // Display the movie poster image, or show a placeholder if not available.
         widget.movie.posterPath != null && widget.movie.posterPath!.isNotEmpty
             ? CachedNetworkImage(
-                imageUrl:
-                    'https://image.tmdb.org/t/p/w500/${widget.movie.posterPath}',
+                imageUrl: '$BASE_IMAGE_URL${widget.movie.posterPath}',
                 width: mediaQueryWidth(context),
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
@@ -191,17 +191,13 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
                                             watchlistProv
                                                 .removeMovieFromWatchlist(
                                                     widget.movie);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(watchlistProv
-                                                        .watchlistMessage)));
+                                            showCustomSnackBar(context,
+                                                watchlistProv.watchlistMessage);
                                           } else {
                                             watchlistProv.addMovieToWatchList(
                                                 widget.movie);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(watchlistProv
-                                                        .watchlistMessage)));
+                                            showCustomSnackBar(context,
+                                                watchlistProv.watchlistMessage);
                                           }
                                         },
                                         child: Row(
@@ -224,17 +220,13 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
                                             favoriteProv
                                                 .removeMovieFromFavorite(
                                                     widget.movie);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(favoriteProv
-                                                        .favoriteMessage)));
+                                            showCustomSnackBar(context,
+                                                favoriteProv.favoriteMessage);
                                           } else {
                                             favoriteProv.addMovieToFavorite(
                                                 widget.movie);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(favoriteProv
-                                                        .favoriteMessage)));
+                                            showCustomSnackBar(context,
+                                                favoriteProv.favoriteMessage);
                                           }
                                         },
                                         icon: FaIcon(
@@ -294,6 +286,7 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
             minChildSize: 0.25,
           ),
         ),
+
         // Navigation buttons (back and download).
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -305,7 +298,19 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
               icon: const Icon(Icons.arrow_back),
             ),
             _NavButton(
-              onPressed: () {},
+              onPressed: () async {
+                final imageProv =
+                    Provider.of<ImageToLocalProvider>(context, listen: false);
+                await imageProv.saveImage(
+                    "$BASE_IMAGE_URL${widget.movie.posterPath}",
+                    "${widget.movie.title}-image");
+
+                if (imageProv.state == ResultState.success) {
+                  showCustomSnackBar(context, imageProv.message!);
+                } else if (imageProv.state == ResultState.error) {
+                  showCustomSnackBar(context, imageProv.message!);
+                }
+              },
               icon: const FaIcon(FontAwesomeIcons.download),
             ),
           ],

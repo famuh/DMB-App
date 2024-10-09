@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../common/state_enum.dart';
-import '../data/api/api_service.dart';
 import '../data/models/Movie.dart';
 
 class FavoriteProvider extends ChangeNotifier {

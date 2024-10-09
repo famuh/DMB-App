@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dmb_app/common/constant.dart';
+import 'package:dmb_app/screen/movie_detail_screen.dart';
 
 import 'package:flutter/material.dart';
 
@@ -16,11 +17,11 @@ class MovieCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
         onTap: () {
-          // Navigator.pushNamed(
-          //   context,
-          //   MovieDetailPage.ROUTE_NAME,
-          //   arguments: movie.id,
-          // );
+          Navigator.pushNamed(
+            context,
+            MovieDetailScreen.ROUTE_NAME,
+            arguments: movie.id,
+          );
         },
         child: Stack(
           alignment: Alignment.bottomLeft,

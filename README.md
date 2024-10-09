@@ -2,10 +2,6 @@
 
 DMB App is a Flutter application that allows users to explore movie information using The Movie DB API. The app enables users to view currently playing movies, popular films, detailed information about movies, and manage their watchlists.
 
-## Apk
-Access DMB App :
-https://drive.google.com/file/d/1Bbz--LfkKbSnfmtiJsVKJ3ah9JJbbVSr/view?usp=sharing
-
 ## Features
 
 - **Now Playing Movies**: Displays movies currently playing in theaters.

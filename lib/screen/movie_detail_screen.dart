@@ -16,9 +16,9 @@ import 'package:dmb_app/widget/movie_card_list.dart';
 
 import '../common/utils.dart';
 import '../data/models/Movie.dart';
+import '../widget/sub_heading.dart';
 
-/// A stateful screen that displays detailed information about a movie.
-///
+
 /// This screen uses several providers to manage data related to the movie details,
 /// user's watchlist, and favorites. It supports asynchronous fetching of movie data
 /// and provides UI to interact with that data (like adding a movie to the watchlist or favorites).
@@ -43,12 +43,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     /// Fetches movie details, watchlist status, and favorite status asynchronously
     /// when the screen is initialized.
     Future.microtask(() {
-      Provider.of<MovieDetailProvider>(context, listen: false)
-        ..fetchDetailMovie(widget.id);
-      Provider.of<WatchlistProvider>(context, listen: false)
-        ..checkWatchlist(widget.id);
-      Provider.of<FavoriteProvider>(context, listen: false)
-        ..checkFavorite(widget.id);
+      Provider.of<MovieDetailProvider>(context, listen: false).fetchDetailMovie(widget.id);
+      Provider.of<WatchlistProvider>(context, listen: false).checkWatchlist(widget.id);
+      Provider.of<FavoriteProvider>(context, listen: false).checkFavorite(widget.id);
     });
   }
 
@@ -243,12 +240,12 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
                             ),
                             const SizedBox(height: 16),
                             // Display movie overview.
-                            const _SubHeading(title: "Overview"),
+                            const SubHeading(title: "Overview"),
                             const SizedBox(height: 10),
                             Text(widget.movie.overview!),
                             const SizedBox(height: 16),
                             // Display similar movies.
-                            const _SubHeading(title: "Similar Movies"),
+                            const SubHeading(title: "Similar Movies"),
                             Consumer<MovieDetailProvider>(
                               builder: (context, data, _) {
                                 if (data.similarState == ResultState.loading) {
@@ -353,23 +350,4 @@ class _NavButton extends StatelessWidget {
   }
 }
 
-/// A reusable subheading widget for sections in the movie detail view.
-class _SubHeading extends StatelessWidget {
-  final String title;
 
-  const _SubHeading({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-      ),
-    );
-  }
-}

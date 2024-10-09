@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 
 import '../data/models/Movie.dart';
 
+/// A widget that displays a card for a movie added to watchlist or favorite
+///
+/// The [MovieCard] widget is a clickable navigates to the movie detail screen.
 class MovieCard extends StatelessWidget {
   final Movie movie;
 
@@ -59,25 +62,28 @@ class MovieCard extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                   ClipRRect(
-                  child: CachedNetworkImage(
-                    imageUrl: '$BASE_IMAGE_URL/${movie.posterPath}',
-                    width: 80,
-                    placeholder: (context, url) => const Center(
-                      child: const CircularProgressIndicator(),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    child: CachedNetworkImage(
+                      imageUrl: '$BASE_IMAGE_URL/${movie.posterPath}',
+                      width: 80,
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),
-                  borderRadius: const BorderRadius.all(const Radius.circular(8)),
-                ),
-              const Row(
-                children: [
-                  const Icon(Icons.abc),
-                  const Icon(Icons.abc, color: Colors.white,),
+                  const Row(
+                    children: [
+                      Icon(Icons.abc),
+                      Icon(
+                        Icons.abc,
+                        color: Colors.white,
+                      ),
+                    ],
+                  )
                 ],
-              )
-                ],
-               
               ),
             ),
           ],
@@ -86,5 +92,3 @@ class MovieCard extends StatelessWidget {
     );
   }
 }
-
-

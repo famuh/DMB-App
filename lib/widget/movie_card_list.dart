@@ -5,8 +5,12 @@ import '../common/constant.dart';
 import '../data/models/Movie.dart';
 import '../screen/movie_detail_screen.dart';
 
-
+/// A widget that displays a card for a movie.
+///
+/// The [MovieCardList] widget is a clickable card that shows the movie's
+/// poster image. When tapped, it navigates to the movie detail screen.
 class MovieCardList extends StatelessWidget {
+  /// The [movie] parameter is required and cannot be null.
   const MovieCardList({
     super.key,
     required this.movie,

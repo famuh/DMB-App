@@ -37,12 +37,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _menuButton(
                     title: "Watchlist",
                     icon: FontAwesomeIcons.clock,
-                    onTap: () {},
                     color: cGreen),
                 _menuButton(
                     title: "Favorite",
                     icon: FontAwesomeIcons.heart,
-                    onTap: () {},
                     color: Colors.red[400]!),
               ]),
         ),
@@ -62,43 +60,38 @@ class _menuButton extends StatelessWidget {
   /// Requires a [title], [icon], [onTap], and [color] as parameters
   final String title;
   final IconData icon;
-  final VoidCallback onTap;
   final Color color;
 
   _menuButton({
     Key? key,
     required this.title,
     required this.icon,
-    required this.onTap,
     required this.color,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-            // color: cGreen,
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: color, width: 2)),
-        width: 150,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: TextStyle(color: color),
-            ),
-            spaceW10,
-            FaIcon(
-              icon,
-              color: color,
-            )
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+          // color: cGreen,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: color, width: 2)),
+      width: 150,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: TextStyle(color: color),
+          ),
+          spaceW10,
+          FaIcon(
+            icon,
+            color: color,
+          )
+        ],
       ),
     );
   }

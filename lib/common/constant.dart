@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color cGreen = Color(0xFF0FA226);
+const Color cGreen05 = Color.fromRGBO(15, 162, 38, .1);
 const Color cBlack = Color(0xFF0C1117);
 
 const String BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';

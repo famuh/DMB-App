@@ -35,13 +35,13 @@ class FavoriteProvider extends ChangeNotifier {
     }
   }
 
-  bool? _isAddedToFavorite;
+  bool? _isAddedToFavorite = false;
   bool? get isAddedToFavorite => _isAddedToFavorite;
 
   ResultState? _isFavState;
   ResultState? get isFavState => _isFavState;
 
-  checkWatchlist(int movieId) async {
+  checkFavorite(int movieId) async {
     _isFavState = ResultState.loading;
     notifyListeners();
     try {
@@ -62,6 +62,24 @@ class FavoriteProvider extends ChangeNotifier {
       _isFavState = ResultState.error;
       print(e.toString());
     } finally {
+      notifyListeners();
+    }
+  }
+
+
+  // Fungsi untuk menghapus movie dari favorite
+  removeMovieFromFavorite(Movie movie) async {
+    _favoriteState = ResultState.loading;
+    notifyListeners();
+    try {
+      _favoriteMovies!.removeWhere((item) => item.id == movie.id);
+      _favoriteMessage = "Berhasil menghapus item dari favorite";
+      _isAddedToFavorite = false;
+      print("berhasil hapus favorite");
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      _favoriteState = ResultState.success;
       notifyListeners();
     }
   }

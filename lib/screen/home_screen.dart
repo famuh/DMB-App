@@ -53,7 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 subtitle: const Text("Semua film kesukaanmu, dalam genggaman."),
-                trailing: IconButton(onPressed: () => Navigator.pushNamed(context, ProfileScreen.ROUTE_NAME), icon: const FaIcon(FontAwesomeIcons.userAstronaut)),
+                trailing: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: cGreen05,
+                  child: IconButton(onPressed: () => Navigator.pushNamed(context, ProfileScreen.ROUTE_NAME), icon: const FaIcon(FontAwesomeIcons.userAstronaut))),
               ),
               spaceH30,
               spaceH30,

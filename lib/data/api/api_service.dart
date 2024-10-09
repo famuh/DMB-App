@@ -97,14 +97,25 @@ class ApiService {
     }
   }
 
-  Future<List<Movie>> getSimiliarMovies(int movieId) async {
+  Future<List<Movie>> getSimilarMovies(int movieId) async {
     String url = '$BASE_URL/movie/$movieId/similar?$API_KEY_AUTH';
 
     try {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        return MovieResponse.fromJson(jsonDecode(response.body)).results!;
+        final result = jsonDecode(response.body);
+        final movieResponse = MovieResponse.fromJson(result);
+        final data = movieResponse.results;
+
+        if (data != null) {
+          final filteredMovies =
+              data.where((movie) => movie.posterPath != null).toList();
+
+          return filteredMovies;
+        } else {
+          throw Exception('No similar movies found');
+        }
       } else {
         throw Exception(
             'Failed to get similiar. Status code: ${response.statusCode}');
@@ -113,5 +124,4 @@ class ApiService {
       throw Exception('Error occurred while getting similiar: $error');
     }
   }
-
 }

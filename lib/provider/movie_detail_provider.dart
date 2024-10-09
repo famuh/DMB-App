@@ -15,44 +15,44 @@ class MovieDetailProvider extends ChangeNotifier {
   String get errorMessage => _errorDetail;
   ResultState? get detailState => _detailState;
 
-  List<Movie> _similiarMovies = [];
-  List<Movie> get similiarMovies => _similiarMovies;
+  List<Movie> _similarMovies = [];
+  List<Movie> get similarMovies => _similarMovies;
 
-  ResultState? _similiarState;
-  ResultState? get similiarState => _similiarState;
+  ResultState? _similarState;
+  ResultState? get similarState => _similarState;
 
   Future<void> fetchDetailMovie(int movieId) async {
     _detailState = ResultState.loading;
-    _similiarState = ResultState.loading;
+    _similarState = ResultState.loading;
 
     notifyListeners();
     try {
       final detailResult = await _apiService.getMovieDetail(movieId);
-      final similiarResult = await _apiService.getSimiliarMovies(movieId);
+      final similarResult = await _apiService.getSimilarMovies(movieId);
 
-      if (detailResult != null && similiarResult.isNotEmpty) {
+      if (detailResult != null && similarResult.isNotEmpty) {
         _detailState = ResultState.success;
-        _similiarState = ResultState.success;
+        _similarState = ResultState.success;
         _detailMovie = detailResult;
 
-        List<Movie> limitedSimiliarMovies = similiarResult.length > 6
-            ? similiarResult.sublist(0, 20)
-            : similiarResult;
+        List<Movie> limitedSimiliarMovies = similarResult.length > 6
+            ? similarResult.sublist(0, 20)
+            : similarResult;
 
-        _similiarMovies = limitedSimiliarMovies;
-      } else if (detailResult == null && similiarResult.isEmpty) {
+        _similarMovies = limitedSimiliarMovies;
+      } else if (detailResult == null && similarResult.isEmpty) {
         _detailState = ResultState.noData;
-        _similiarState = ResultState.noData;
+        _similarState = ResultState.noData;
         _detailMovie = null;
-        _similiarMovies = [];
+        _similarMovies = [];
       } else {
         _detailState = ResultState.error;
-        _similiarState = ResultState.error;
+        _similarState = ResultState.error;
         _errorDetail = 'Gagal memuat data';
       }
     } catch (e) {
       _detailState = ResultState.error;
-      _similiarState = ResultState.error;
+      _similarState = ResultState.error;
       _errorDetail = e.toString();
     } finally {
       notifyListeners();

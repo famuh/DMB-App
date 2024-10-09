@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dmb_app/provider/favorite_provider.dart';
+import 'package:dmb_app/widget/movie_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -9,11 +9,10 @@ import 'package:provider/provider.dart';
 
 import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/state_enum.dart';
-import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/provider/movie_detail_provider.dart';
 import 'package:dmb_app/provider/watchlist_provider.dart';
-import 'package:dmb_app/widget/movie_card_list.dart';
 
+import '../common/utils.dart';
 import '../data/models/Movie.dart';
 
 class MovieDetailScreen extends StatefulWidget {
@@ -37,6 +36,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
       Provider.of<WatchlistProvider>(context, listen: false)
         ..checkWatchlist(widget.id);
+
+      Provider.of<FavoriteProvider>(context, listen: false)
+        ..checkFavorite(widget.id);
     });
   }
 
@@ -54,7 +56,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           return SafeArea(
             child: MovieDetailContent(
               movie: movie!,
-              similiars: state.similiarMovies,
+              similiars: state.similarMovies,
               isAddedWatchlist: profileProf.isAddedToWatchlist!,
             ),
           );
@@ -66,7 +68,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 }
 
-class MovieDetailContent extends StatelessWidget {
+class MovieDetailContent extends StatefulWidget {
   final Movie movie;
   final List<Movie> similiars;
   final bool isAddedWatchlist;
@@ -79,16 +81,21 @@ class MovieDetailContent extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<MovieDetailContent> createState() => _MovieDetailContentState();
+}
+
+class _MovieDetailContentState extends State<MovieDetailContent> {
+  @override
   Widget build(BuildContext context) {
-    final watchlistProv =
-        Provider.of<WatchlistProvider>(context, listen: false);
-    final favoriteProv = Provider.of<FavoriteProvider>(context, listen: false);
+    final watchlistProv = Provider.of<WatchlistProvider>(context);
+    final favoriteProv = Provider.of<FavoriteProvider>(context);
 
     return Stack(
       children: [
-        movie.posterPath != null && movie.posterPath!.isNotEmpty
+        widget.movie.posterPath != null && widget.movie.posterPath!.isNotEmpty
             ? CachedNetworkImage(
-                imageUrl: 'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                imageUrl:
+                    'https://image.tmdb.org/t/p/w500/${widget.movie.posterPath}',
                 width: mediaQueryWidth(context),
                 placeholder: (context, url) => const Center(
                   child: CircularProgressIndicator(),
@@ -97,10 +104,9 @@ class MovieDetailContent extends StatelessWidget {
                     const Center(child: Icon(Icons.error)),
               )
             : Container(
-                height: 300, // Adjust the height based on your layout
+                height: 300,
                 width: mediaQueryWidth(context),
-                color:
-                    Colors.grey, // Placeholder color if no image is available
+                color: Colors.grey,
                 child: const Center(
                   child: Text('No Image Available'),
                 ),
@@ -139,15 +145,14 @@ class MovieDetailContent extends StatelessWidget {
                                   ),
                                   itemSize: 24,
                                 ),
-                                Text('${movie.voteAverage}')
+                                Text('${widget.movie.voteAverage}')
                               ],
                             ),
                             Text(
-                              movie.title!,
+                              widget.movie.title!,
                               style: const TextStyle(
                                   fontSize: 23, fontWeight: FontWeight.w400),
                             ),
-
                             SizedBox(
                               width: mediaQueryWidth(context),
                               child: Row(
@@ -155,147 +160,92 @@ class MovieDetailContent extends StatelessWidget {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () async {
-                                      if (watchlistProv.isAddedToWatchlist ==
-                                          true) {
-                                        // remove
+                                      if (watchlistProv.isAddedToWatchlist!) {
+                                        watchlistProv.removeMovieFromWatchlist(
+                                            widget.movie);
                                       } else {
                                         watchlistProv
-                                            .addMovieToWatchList(movie);
+                                            .addMovieToWatchList(widget.movie);
                                       }
-                                      // else {
-                                      //   await Provider.of<MovieDetailNotifier>(
-                                      //           context,
-                                      //           listen: false)
-                                      //       .removeFromWatchlist(movie);
-                                      // }
-
-                                      // final message =
-                                      //     Provider.of<MovieDetailNotifier>(context,
-                                      //             listen: false)
-                                      //         .watchlistMessage;
-
-                                      // if (message ==
-                                      //         MovieDetailNotifier
-                                      //             .watchlistAddSuccessMessage ||
-                                      //     message ==
-                                      //         MovieDetailNotifier
-                                      //             .watchlistRemoveSuccessMessage) {
-                                      //   ScaffoldMessenger.of(context).showSnackBar(
-                                      //       SnackBar(content: Text(message)));
-                                      // } else {
-                                      //   showDialog(
-                                      //       context: context,
-                                      //       builder: (context) {
-                                      //         return AlertDialog(
-                                      //           content: Text(message),
-                                      //         );
-                                      //       });
-                                      // }
+                                      setState(() {});
                                     },
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        watchlistProv.isAddedToWatchlist == true
+                                        watchlistProv.isAddedToWatchlist!
                                             ? const Icon(Icons.check)
                                             : const Icon(Icons.add),
                                         const Text('Watchlist'),
                                       ],
                                     ),
                                   ),
-                                  favoriteProv.isAddedToFavorite == true
-                                      ? IconButton(
-                                          onPressed: () {
-                                            // fungsi hapus
-                                          },
-                                          icon: FaIcon(
-                                            FontAwesomeIcons.solidHeart,
-                                            color: Colors.red[400]!,
-                                          ))
-                                      : IconButton(
-                                          onPressed: () {
-                                            // tambah item
-                                            favoriteProv.addMovieToFavorite(movie);
-                                          },
-                                          icon: FaIcon(
-                                            FontAwesomeIcons.heart,
-                                            color: Colors.red[400]!,
-                                          )),
+                                  Consumer<FavoriteProvider>(
+                                    builder: (context, favoriteProv, _) {
+                                      return IconButton(
+                                        onPressed: () {
+                                          if (favoriteProv.isAddedToFavorite!) {
+                                            favoriteProv
+                                                .removeMovieFromFavorite(
+                                                    widget.movie);
+                                          } else {
+                                            favoriteProv.addMovieToFavorite(
+                                                widget.movie);
+                                          }
+                                          setState(() {});
+                                        },
+                                        icon: FaIcon(
+                                          favoriteProv.isAddedToFavorite!
+                                              ? FontAwesomeIcons.solidHeart
+                                              : FontAwesomeIcons.heart,
+                                          color: Colors.red[400]!,
+                                        ),
+                                      );
+                                    },
+                                  )
                                 ],
                               ),
                             ),
-
-                            // Text(
-                            //   _showGenres(movie.genreIds!),
-                            // ),
-                            // Text(
-                            //   _showDuration(movie.),
-                            // ),
-
                             const SizedBox(height: 16),
                             const Text(
                               'Overview',
-                              // style: kHeading6,
                             ),
-                            spaceH10,
+                            const SizedBox(height: 10),
+                            Text(widget.movie.overview!),
 
-                            Text(
-                              movie.overview!,
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              'Similar Movies',
-                              // style: kHeading6,
-                            ),
-                            spaceH10,
+                             Consumer<MovieDetailProvider>(builder: (context, data, _) {
+                      if (data.similarState == ResultState.loading) {
+                        return const Center(
+                          child: const CircularProgressIndicator(),
+                        );
+                      } else if (data.similarState == ResultState.error) {
+                        return Text(data.errorMessage);
+                      } else if (data.similarState == ResultState.success) {
+                        return Container(
+                          height: 150,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: data.similarMovies.length,
+                            itemBuilder: (context, index) {
+                              final item = data.similarMovies[index];
 
-                            // disini kendalanya
-                            // Consumer<MovieDetailProvider>(
-                            //   builder: (context, data, _) {
-                            //     if (data.similiarState == ResultState.loading) {
-                            //       return const Center(
-                            //         child: const CircularProgressIndicator(),
-                            //       );
-                            //     } else if (data.similiarState ==
-                            //         ResultState.error) {
-                            //       return Text(data.errorMessage);
-                            //     } else if (data.similiarState ==
-                            //         ResultState.success) {
-                            //       return SizedBox(
-                            //         height: 160,
-                            //         child: ListView.builder(
-                            //           itemCount: similiars.length,
-                            //           scrollDirection: Axis.horizontal,
-                            //           itemBuilder:
-                            //               (BuildContext context, int index) {
-                            //             final movieItem = similiars[index];
-                            //             return MovieCardList(movie: movieItem);
-                            //           },
-                            //         ),
-                            //       );
-                            //     } else {
-                            //       return Container();
-                            //     }
-                            //   },
-                            // ),
+                              return MovieCardList(movie: item);
+                            },
+                          ),
+                        );
+                      } else{
+                        return Container();
+                      }
+                    })
+                
                           ],
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        color: Colors.white,
-                        height: 4,
-                        width: 48,
-                      ),
-                    ),
+                   
                   ],
                 ),
               );
             },
-            // initialChildSize: 0.5,
             minChildSize: 0.25,
-            // maxChildSize: 1.0,
           ),
         ),
         Padding(
@@ -314,19 +264,6 @@ class MovieDetailContent extends StatelessWidget {
       ],
     );
   }
-
-  //  String _showGenres(List<int> genres) {
-  //   String result = '';
-  //   for (var genre in genres) {
-  //     result += genre.name + ', ';
-  //   }
-
-  //   if (result.isEmpty) {
-  //     return result;
-  //   }
-
-  //   return result.substring(0, result.length - 2);
-  // }
 
   String _showDuration(int runtime) {
     final int hours = runtime ~/ 60;

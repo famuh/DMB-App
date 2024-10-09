@@ -5,6 +5,7 @@ import 'package:dmb_app/provider/image_to_local_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:dmb_app/common/constant.dart';
@@ -17,7 +18,6 @@ import 'package:dmb_app/widget/movie_card_list.dart';
 import '../common/utils.dart';
 import '../data/models/Movie.dart';
 import '../widget/sub_heading.dart';
-
 
 /// This screen uses several providers to manage data related to the movie details,
 /// user's watchlist, and favorites. It supports asynchronous fetching of movie data
@@ -43,9 +43,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     /// Fetches movie details, watchlist status, and favorite status asynchronously
     /// when the screen is initialized.
     Future.microtask(() {
-      Provider.of<MovieDetailProvider>(context, listen: false).fetchDetailMovie(widget.id);
-      Provider.of<WatchlistProvider>(context, listen: false).checkWatchlist(widget.id);
-      Provider.of<FavoriteProvider>(context, listen: false).checkFavorite(widget.id);
+      Provider.of<MovieDetailProvider>(context, listen: false)
+          .fetchDetailMovie(widget.id);
+      Provider.of<WatchlistProvider>(context, listen: false)
+          .checkWatchlist(widget.id);
+      Provider.of<FavoriteProvider>(context, listen: false)
+          .checkFavorite(widget.id);
     });
   }
 
@@ -298,14 +301,37 @@ class _MovieDetailContentState extends State<MovieDetailContent> {
               onPressed: () async {
                 final imageProv =
                     Provider.of<ImageToLocalProvider>(context, listen: false);
-                await imageProv.saveImage(
-                    "$BASE_IMAGE_URL${widget.movie.posterPath}",
-                    "${widget.movie.title}-image");
 
-                if (imageProv.state == ResultState.success) {
-                  showCustomSnackBar(context, imageProv.message!);
-                } else if (imageProv.state == ResultState.error) {
-                  showCustomSnackBar(context, imageProv.message!);
+                /// Check storage permission
+                /// if granted start download, if not will request permission
+                if (await storagePermission(Permission.storage) == true) {
+                  await imageProv.saveImage(
+                      "$BASE_IMAGE_URL${widget.movie.posterPath}",
+                      "${widget.movie.title}-image");
+
+                  if (imageProv.state == ResultState.success) {
+                    showCustomSnackBar(context, imageProv.message!);
+                  } else if (imageProv.state == ResultState.error) {
+                    showCustomSnackBar(context, imageProv.message!);
+                  }
+                } else {
+                  var status = await Permission.storage.request();
+                  if (status.isGranted) {
+                     await imageProv.saveImage(
+                      "$BASE_IMAGE_URL${widget.movie.posterPath}",
+                      "${widget.movie.title}-image");
+
+                  if (imageProv.state == ResultState.success) {
+                    showCustomSnackBar(context, imageProv.message!);
+                  } else if (imageProv.state == ResultState.error) {
+                    showCustomSnackBar(context, imageProv.message!);
+                  }
+                  } else {
+                     showCustomSnackBar(context,
+                      'Permission not granted. Cannot download image.');
+                  }
+
+                 
                 }
               },
               icon: const FaIcon(FontAwesomeIcons.download),
@@ -349,5 +375,3 @@ class _NavButton extends StatelessWidget {
     );
   }
 }
-
-

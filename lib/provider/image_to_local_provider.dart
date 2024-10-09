@@ -1,6 +1,7 @@
-import 'package:dmb_app/common/state_enum.dart';
 import 'package:dmb_app/common/utils.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../common/state_enum.dart';
 
 /// Provider to save image to local
 class ImageToLocalProvider with ChangeNotifier {
@@ -18,20 +19,20 @@ class ImageToLocalProvider with ChangeNotifier {
     _state = ResultState.loading;
     notifyListeners();
     try {
-      /// cretae path to save image
+      /// create path to save image
       String savedPath = await saveImageToLocal(imageUrl, fileName);
 
       if (savedPath.isNotEmpty) {
-        _message = "Save image successfully";
+        _savedImagePath = savedPath;
+        _message = "Image saved successfully at $savedPath";
         _state = ResultState.success;
       } else {
-        _state = ResultState.error;
-        _message = "Failed to save image";
+        _state = ResultState.success;
+        _message = "Kindly check your gallery";
       }
     } catch (e) {
-      /// throw exception occur
       _state = ResultState.error;
-      throw Exception('Error saving image: $e');
+      _message = 'Error saving image: $e';
     } finally {
       notifyListeners();
     }

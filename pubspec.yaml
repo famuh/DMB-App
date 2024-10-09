@@ -8,13 +8,16 @@ environment:
 
 dependencies:
   cached_network_image: ^3.4.0
+  device_info_plus: ^10.1.2
   flutter:
     sdk: flutter
   flutter_rating_bar: ^4.0.1
   font_awesome_flutter: ^10.7.0
   http: ^1.2.2
   
+  image_gallery_saver: ^2.0.3
   path_provider: ^2.1.4
+  permission_handler: ^11.3.1
   provider: ^6.1.2
 
 dev_dependencies:

@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+/// A screen that displays user profile information.
+///
+/// The [ProfileScreen] class provides tabs for viewing the user's
+/// watchlist and favorite movies. It serves as a profile page
+/// where users can manage their movie preferences.
 class ProfileScreen extends StatefulWidget {
   static const ROUTE_NAME = '/profile';
 
@@ -42,19 +47,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ]),
         ),
         body: const Flexible(
-          child:
-              const TabBarView(children: [WatchlistMovie(), FavoriteMovie()]),
+          child: TabBarView(children: [WatchlistMovie(), FavoriteMovie()]),
         ),
       ),
     );
   }
 }
 
+/// A custom menu button for the profile screen.
+///
+/// This widget displays a button with a title and an icon. It
+/// supports tap actions and can be customized with colors.
 class _menuButton extends StatelessWidget {
-  String title;
-  IconData icon;
-  VoidCallback onTap;
-  Color color;
+  /// Requires a [title], [icon], [onTap], and [color] as parameters
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
+  final Color color;
 
   _menuButton({
     Key? key,
@@ -95,6 +104,10 @@ class _menuButton extends StatelessWidget {
   }
 }
 
+/// A widget that displays the user's watchlist movies.
+///
+/// This widget retrieves and displays a list of movies that the
+/// user has added to their watchlist.
 class WatchlistMovie extends StatelessWidget {
   const WatchlistMovie({super.key});
 
@@ -106,7 +119,7 @@ class WatchlistMovie extends StatelessWidget {
         builder: (context, state, _) {
           if (state.watchlistMovies == null || state.watchlistMovies!.isEmpty) {
             return const Center(
-              child: Text("Belum ada item di watchlist"),
+              child: Text("No items on watchlist yet"),
             );
           } else {
             return ListView.builder(
@@ -123,7 +136,10 @@ class WatchlistMovie extends StatelessWidget {
   }
 }
 
-
+/// A widget that displays the user's favorite movies.
+///
+/// This widget retrieves and displays a list of movies that the
+/// user has marked as favorite.
 class FavoriteMovie extends StatelessWidget {
   const FavoriteMovie({super.key});
 
@@ -135,7 +151,7 @@ class FavoriteMovie extends StatelessWidget {
         builder: (context, state, _) {
           if (state.favoriteMovies == null || state.favoriteMovies!.isEmpty) {
             return const Center(
-              child: Text("Belum ada item di favorite"),
+              child: Text("No items on favorite yet"),
             );
           } else {
             return ListView.builder(

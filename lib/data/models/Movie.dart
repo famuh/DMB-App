@@ -1,3 +1,9 @@
+// ignore_for_file: file_names, dangling_library_doc_comments
+
+/// A class representing a movie.
+/// This class contains details about a movie, including its ID,
+/// title, release information, and various attributes related to
+/// its popularity and viewer ratings.
 class Movie {
   int? id;
   String? title;
@@ -29,6 +35,7 @@ class Movie {
     this.genreIds,
   });
 
+  /// Factory method to create a [Movie] instance from a JSON response.
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(
       id: json['id'],
@@ -49,6 +56,7 @@ class Movie {
     );
   }
 
+  /// Converts the [Movie] instance to a JSON-compatible [Map].
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -68,6 +76,7 @@ class Movie {
   }
 }
 
+/// An enumeration representing the original languages of movies.
 enum OriginalLanguage { EN, KO, PT }
 
 final originalLanguageValues = EnumValues({

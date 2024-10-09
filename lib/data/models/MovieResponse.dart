@@ -1,12 +1,13 @@
-
-
 import 'dart:convert';
 
 import 'package:dmb_app/data/models/Movie.dart';
 
-MovieResponse movieResponseFromJson(String str) => MovieResponse.fromJson(json.decode(str));
+MovieResponse movieResponseFromJson(String str) =>
+    MovieResponse.fromJson(json.decode(str));
 
-
+/// A class representing a response containing a list of movies.
+///
+/// This class includes pagination details, the list of movies, and total results.
 class MovieResponse {
   int? page;
   List<Movie>? results;
@@ -20,6 +21,7 @@ class MovieResponse {
     this.totalResults,
   });
 
+  /// Factory method to create a [MovieResponse] instance from a JSON response.
   factory MovieResponse.fromJson(Map<String, dynamic> json) {
     return MovieResponse(
       page: json['page'],
@@ -32,27 +34,27 @@ class MovieResponse {
   }
 }
 
+/// A class representing the date range of available movies.
 class Dates {
-    DateTime maximum;
-    DateTime minimum;
+  DateTime maximum;
+  DateTime minimum;
 
-    Dates({
-        required this.maximum,
-        required this.minimum,
-    });
+  Dates({
+    required this.maximum,
+    required this.minimum,
+  });
 
-    factory Dates.fromJson(Map<String, dynamic> json) => Dates(
+  /// Factory method to create a [Dates] instance from a JSON response.
+  factory Dates.fromJson(Map<String, dynamic> json) => Dates(
         maximum: DateTime.parse(json["maximum"]),
         minimum: DateTime.parse(json["minimum"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
-        "maximum": "${maximum.year.toString().padLeft(4, '0')}-${maximum.month.toString().padLeft(2, '0')}-${maximum.day.toString().padLeft(2, '0')}",
-        "minimum": "${minimum.year.toString().padLeft(4, '0')}-${minimum.month.toString().padLeft(2, '0')}-${minimum.day.toString().padLeft(2, '0')}",
-    };
+  /// Converts the [Dates] instance to a JSON-compatible [Map].
+  Map<String, dynamic> toJson() => {
+        "maximum":
+            "${maximum.year.toString().padLeft(4, '0')}-${maximum.month.toString().padLeft(2, '0')}-${maximum.day.toString().padLeft(2, '0')}",
+        "minimum":
+            "${minimum.year.toString().padLeft(4, '0')}-${minimum.month.toString().padLeft(2, '0')}-${minimum.day.toString().padLeft(2, '0')}",
+      };
 }
-
-
-
-
-

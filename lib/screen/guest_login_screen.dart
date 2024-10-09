@@ -4,11 +4,13 @@ import 'package:dmb_app/common/constant.dart';
 import 'package:dmb_app/common/utils.dart';
 import 'package:dmb_app/screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/guest_login_provider.dart';
 
+/// Class represents the guest login screen of the app.
+/// It allows users to create a guest session for accessing the app
+/// without a permanent account.
 class GuestLoginScreen extends StatefulWidget {
   static const ROUTE_NAME = '/guestlogin';
 
@@ -24,14 +26,14 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
     return Scaffold(
       body: Center(child: Consumer<GuestSessionProvider>(
         builder: (context, guestSessionProvider, _) {
-          // Jika proses autentikasi sedang berlangsung
+          // User successfully authenticated, navigate to HomeScreen
           if (guestSessionProvider.isAuthenticated) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
             });
-            return const Text("Explore, Enjoy !");
+            return const Text("");
           } else if (guestSessionProvider.errorMessage != null) {
-            // Jika ada error saat autentikasi
+            // Error during authentication, display error message with retry button
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -49,15 +51,13 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
               ],
             );
           } else {
-            // Tombol untuk membuat Guest Session baru
+            // No guest session yet, display widget to create one
             return Stack(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: const AnimatedImage()
-           
-                ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: const AnimatedImage()),
                 Container(
                   width: mediaQueryWidth(context),
                   height: mediaQueryHeight(context),
@@ -81,21 +81,22 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
                         const Text(
                           "Get ready to dive into the greatest stories wrapped in captivating films.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            
-                          ),),
-                          const SizedBox(height: 10,),
+                          style: TextStyle(),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
-                          width: mediaQueryWidth(context)/2,
+                          width: mediaQueryWidth(context) / 2,
                           child: ElevatedButton(
-                              onPressed: () async {
-                                await guestSessionProvider.createGuestSession();
-                              },
-                              style: ElevatedButton.styleFrom(
+                            onPressed: () async {
+                              await guestSessionProvider.createGuestSession();
+                            },
+                            style: ElevatedButton.styleFrom(
                                 backgroundColor: cGreen,
-                                foregroundColor: Colors.white
-                              ),
-                              child: const Text("Watch Now"),),
+                                foregroundColor: Colors.white),
+                            child: const Text("Watch Now"),
+                          ),
                         ),
                       ],
                     ),
@@ -110,6 +111,7 @@ class _GuestLoginScreenState extends State<GuestLoginScreen> {
   }
 }
 
+/// Creates a widget that displays an animated background image.
 class AnimatedImage extends StatefulWidget {
   const AnimatedImage({super.key});
 
@@ -118,6 +120,7 @@ class AnimatedImage extends StatefulWidget {
 }
 
 class _AnimatedImageState extends State<AnimatedImage> {
+  /// List of image URLs to be displayed in the animation.
   final List<String> _imageUrls = [
     '$BASE_IMAGE_URL/if8QiqCI7WAGImKcJCfzp6VTyKA.jpg',
     '$BASE_IMAGE_URL/vOX1Zng472PC2KnS0B9nRfM8aaZ.jpg',
@@ -133,8 +136,8 @@ class _AnimatedImageState extends State<AnimatedImage> {
   @override
   void initState() {
     super.initState();
-    // Timer untuk otomatis mengganti gambar setiap 5 detik
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    // Timer to change image automaticly every 3 seconds
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (mounted) {
         _fadeOutImage();
       }
@@ -143,23 +146,22 @@ class _AnimatedImageState extends State<AnimatedImage> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Menghentikan timer saat widget di-dispose
+    _timer?.cancel(); // Stop timer when widget dispose
     super.dispose();
   }
 
   void _fadeOutImage() {
-    if (!mounted) return; // Tambahkan pengecekan mounted
+    if (!mounted) return;
 
     setState(() {
-      _opacity = 0.0; // Memulai animasi fade-out
+      _opacity = 0.0; // Start fade-out animation
     });
 
-    // Setelah animasi fade-out selesai, ganti gambar dan fade-in
     Future.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) return; // Tambahkan pengecekan mounted sebelum setState
+      if (!mounted) return;
       setState(() {
         _currentIndex = (_currentIndex + 1) % _imageUrls.length;
-        _opacity = 1.0; // Animasi fade-in dimulai setelah gambar diganti
+        _opacity = 1.0;
       });
     });
   }
